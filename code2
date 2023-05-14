@@ -1,0 +1,79 @@
+#include <string>
+#include<windows.h>
+#include <iostream>
+#include <stdlib.h>
+#include <chrono>
+namespace helper {
+
+
+
+
+  void drawline(int px, int py, int p2x, int p2y) {
+		HDC hdc = GetDC(GetConsoleWindow());
+
+		float slope = (static_cast<float>(p2y) - py) / (p2x - px);
+		int constn = 0;
+		if (slope>0)
+		{
+			constn = 1;
+		}
+		
+		int startValue;
+		int endValue;
+
+		COLORREF pixelColor = RGB(255, 255, 255);
+		int startx = p2x;
+		int endx = px;
+		
+		float yconst;
+		
+		if (p2x > px) {
+			startx = px;
+			endx = p2x; 
+			
+			yconst = py - slope * startx;
+		}
+         else
+                   {
+			
+			yconst = p2y - slope * startx;
+           }
+		for (int i = startx; i <=endx; i++)
+		{
+			startValue = floor(slope * (i - constn));
+			endValue = floor(slope * (i + constn - 1));
+// calculate how much it has to go up btw optize stuff
+			for (int j = startValue ; j <=endValue ; j++)
+			{
+			
+				for (int g = 0; g <3; g++)
+				{
+
+					SetPixel(hdc, i+g, j + yconst,pixelColor);
+					
+				}
+				
+			}
+		
+			
+			//std::cout << prevy;
+		}
+		
+		ReleaseDC(GetConsoleWindow(), hdc);
+	}
+}
+using namespace helper;
+using namespace std::chrono;
+using namespace std;
+int main()
+{
+	
+	auto a = high_resolution_clock::now();
+	
+	drawline(422,40,0,3);
+	auto b = high_resolution_clock::now();
+	cout << "took " << duration_cast<nanoseconds>(b - a).count() << " nano" << endl;
+	string d;
+	cin >> d;
+	
+}
